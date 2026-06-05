@@ -41,7 +41,7 @@ function collect_manifests()
 
           local game = {
             -- Get the entrypoint path
-            entrypoint = i_path .. ENTRYPOINT_SCRIPT_NAME,
+            entrypoint = i_path .. "/" .. ENTRYPOINT_SCRIPT_NAME,
             metadata = metadata
           }
 
