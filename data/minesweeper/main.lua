@@ -332,6 +332,6 @@ function move_cursor(button)
   if button == "R_UP" or button == "L_UP" then cursor_y = cursor_y - 1 end
   if button == "R_DOWN" or button == "L_DOWN" then cursor_y = cursor_y + 1 end
 
-  cursor_x = clamp(cursor_x, 0, SCREEN_W - 1)
-  cursor_y = clamp(cursor_y, 0, SCREEN_H - 1)
+  cursor_x = cursor_x % SCREEN_W
+  cursor_y = cursor_y % SCREEN_H
 end
