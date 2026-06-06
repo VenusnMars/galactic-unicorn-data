@@ -1,5 +1,4 @@
-
-local video_player = require("/video/player.lua")
+local video_player = require("video.player")
 
 LEVELS = {
     {

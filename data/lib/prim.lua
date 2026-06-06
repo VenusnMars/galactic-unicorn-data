@@ -1,4 +1,4 @@
-local Set = require("/lib/set.lua")
+local Set = require("lib.set")
 
 -- Prim's algorithm: find the minimum spanning tree of a graph;
 -- i.e. the minimal graph that ensures all nodes are reachable by at least 1 edge

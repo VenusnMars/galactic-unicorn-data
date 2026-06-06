@@ -1,6 +1,6 @@
-local Vector2 = require("/lib/vector2.lua")
-local Enum = require("/lib/enum.lua")
-local a_star = require("/rogue/astar.lua")
+local Vector2 = require("lib.vector2")
+local Enum = require("lib.enum")
+local a_star = require("rogue.astar")
 
 local DEFAULT_HEALTH = 20
 local DEFAULT_DAMAGE = 15

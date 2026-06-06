@@ -1,6 +1,6 @@
 -- Video player standalone application
 
-local video_player = require("/video/player.lua")
+local video_player = require("video.player")
 
 -- Can't have all videos at once, there's just not enough flash memory (4MB, and the 16-bit rickroll
 -- is already 2.1MB)

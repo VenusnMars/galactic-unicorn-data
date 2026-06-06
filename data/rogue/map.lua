@@ -1,5 +1,5 @@
-local Prim = require("/lib/prim.lua")
-local Vector2 = require("/lib/vector2.lua")
+local Prim = require("lib.prim")
+local Vector2 = require("lib.vector2")
 
 MAP_WIDTH = 25
 MAP_HEIGHT = 25

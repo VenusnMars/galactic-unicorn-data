@@ -1,5 +1,4 @@
-
-local Vector2 = require("/lib/vector2.lua")
+local Vector2 = require("lib.vector2")
 
 local BASE_MAX_HEALTH = 100
 local HEALTH_PER_LEVEL = 15

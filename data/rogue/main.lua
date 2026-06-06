@@ -1,14 +1,14 @@
 -- Main
-local Vector2 = require("/lib/vector2.lua")
-local Enum = require("/lib/enum.lua")
+local Vector2 = require("lib.vector2")
+local Enum = require("lib.enum")
 
 -- Global player instance
-player = require("/rogue/player.lua")
-map = require("/rogue/map.lua") -- Make map a global
+player = require("rogue.player")
+map = require("rogue.map") -- Make map a global
 
-local healthbar = require("/rogue/healthbar.lua")
-local viewport = require("/rogue/viewport.lua")
-local Enemy = require("/rogue/enemy.lua")
+local healthbar = require("rogue.healthbar")
+local viewport = require("rogue.viewport")
+local Enemy = require("rogue.enemy")
 
 local PLAYER_COLOR = rgb(255, 255, 2)
 local WALL_COLOR = rgb(191, 191, 191)
