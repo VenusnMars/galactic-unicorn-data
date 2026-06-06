@@ -1,6 +1,11 @@
 ENTRYPOINT_SCRIPT_NAME = "main.lua"
 _MANIFEST = {}
 
+local Text = require("lib.text")
+local Font4x6 = require("lib.fonts.4x6")
+
+local text = Text.new(Font4x6)
+
 CURSOR_COLOR = rgb(255, 255, 255)
 CURSOR_BLINK_HZ = 1.5
 -- Cursor input move repeat
@@ -12,6 +17,8 @@ REPEAT_INTERVAL = 0.1
 TILE = 1
 TILE_COLS = SCREEN_W // TILE
 TILE_ROWS = SCREEN_H // TILE
+TEXT_HEIGHT = text.get_text_height()
+MENU_H = SCREEN_H - TEXT_HEIGHT
 
 -- Cursor in tile coordinates (0 .. TILE_COLS-1, 0 .. TILE_ROWS-1)
 cursor_x = 0
@@ -41,7 +48,7 @@ function collect_manifests()
           module_name = string.gsub(module_name, "/", ".")
 
           -- A manifest fragment MUST return a table with at least a "color" and "title" field
-          -- Load the manifest through a Lua require, which will execute the manifest script.
+          -- Load the manifest through a Lua require.
           local metadata = require(module_name)
 
           local game = {
@@ -69,7 +76,7 @@ end
 -- tiling without leftover spaces, and can accomodate respectively 200, 100, 16 and 4
 -- games in the manifest. So we pick the largest one that can fit all games
 function refresh_tile_geometry_from_manifest()
-  local W, H = SCREEN_W, SCREEN_H
+  local W, H = SCREEN_W, MENU_H
   local n = (_MANIFEST ~= nil) and #_MANIFEST or 0
   if n < 1 then
     TILE = 1
@@ -99,13 +106,33 @@ function tile_to_manifest_index(tx, ty)
   return ty * TILE_COLS + tx + 1
 end
 
+function build_menu_text()
+  if _MANIFEST == nil or #_MANIFEST == 0 then
+    text.reset()
+    return
+  end
+
+  local selected_index = tile_to_manifest_index(cursor_x, cursor_y)
+  local game = _MANIFEST[selected_index]
+  local label = ""
+
+  if game then
+    label = game.metadata.title or "Untitled"
+  end
+
+  text.set_text(label .. "    ") -- FIXME: should be SCREEN_W / 5 spaces
+end
+
 function setup()
   _MANIFEST = collect_manifests()
   refresh_tile_geometry_from_manifest()
+  build_menu_text()
 end
 
-function update(_delta_time)
+function update(delta_time)
   local now = get_time()
+
+  text.scroll(delta_time)
 
   for button, _ in pairs(held) do
     local state = hold_state[button]
@@ -143,7 +170,8 @@ function draw()
     end
   end
 
-  draw_cursor()
+ draw_cursor()
+ text.draw(0, SCREEN_H - TEXT_HEIGHT)
 end
 
 function draw_cursor()
@@ -189,7 +217,9 @@ function move_cursor(button)
   if button == "R_UP" or button == "L_UP" then cursor_y = cursor_y - 1 end
   if button == "R_DOWN" or button == "L_DOWN" then cursor_y = cursor_y + 1 end
 
+  cursor_x = cursor_x % TILE_COLS
+  cursor_y = cursor_y % TILE_ROWS
 
-  cursor_x = clamp(cursor_x, 0, TILE_COLS - 1)
-  cursor_y = clamp(cursor_y, 0, TILE_ROWS - 1)
+    -- Refresh the ticker text to match the newly selected game
+  build_menu_text()
 end
