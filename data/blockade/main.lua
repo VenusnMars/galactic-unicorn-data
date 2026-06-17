@@ -26,17 +26,17 @@ function setup()
   p1.x = 3
   p1.y = 2
   p1.dir = DIR.DOWN
-  p1.nextDir = DIR.DOWN
+  p1.next_dir = DIR.DOWN
   grid[p1.x][p1.y] = "p1"
 
   p2.x = SCREEN_W - 4
   p2.y = 7
   p2.dir = DIR.UP
-  p2.nextDir = DIR.UP
+  p2.next_dir = DIR.UP
   grid[p2.x][p2.y] = "p2"
 end
 
-function resetGame()
+function reset_game()
   p1.score = 0
   p2.score = 0
   game_over = false
@@ -51,39 +51,39 @@ function update(dt)
   if tick_timer >= tick_rate then
     tick_timer = tick_timer - tick_rate
 
-    p1.dir = p1.nextDir
-    p2.dir = p2.nextDir
+    p1.dir = p1.next_dir
+    p2.dir = p2.next_dir
 
-    p1NextX = p1.x + p1.dir.x
-    p1NextY = p1.y + p1.dir.y
-    p2NextX = p2.x + p2.dir.x
-    p2NextY = p2.y + p2.dir.y
+    p1_next_X = p1.x + p1.dir.x
+    p1_next_Y = p1.y + p1.dir.y
+    p2_next_X = p2.x + p2.dir.x
+    p2_next_Y = p2.y + p2.dir.y
 
-    p1Crash = false
-    p2Crash = false
+    p1_crash = false
+    p2_crash = false
 
-    if p1NextX < 0 or p1NextX >= SCREEN_W or p1NextY < 0 or p1NextY >= SCREEN_H or grid[p1NextX][p1NextY] then
-      p1Crash = true
+    if p1_next_X < 0 or p1_next_X >= SCREEN_W or p1_next_Y < 0 or p1_next_Y >= SCREEN_H or grid[p1_next_X][p1_next_Y] then
+      p1_crash = true
     end
 
-    if p2NextX < 0 or p2NextX >= SCREEN_W or p2NextY < 0 or p2NextY >= SCREEN_H or grid[p2NextX][p2NextY] then
-      p2Crash = true
+    if p2_next_X < 0 or p2_next_X >= SCREEN_W or p2_next_Y < 0 or p2_next_Y >= SCREEN_H or grid[p2_next_X][p2_next_Y] then
+      p2_crash = true
     end
 
-    if p1NextX == p2NextX and p1NextY == p2NextY then
-      p1Crash = true
-      p2Crash = true
+    if p1_next_X == p2_next_X and p1_next_Y == p2_next_Y then
+      p1_crash = true
+      p2_crash = true
     end
 
-    if p1Crash or p2Crash then
+    if p1_crash or p2_crash then
       buzz(300, 150)
 
-      if p1Crash and p2Crash then
+      if p1_crash and p2_crash then
         p1.score = p1.score + 1
         p2.score = p2.score + 1
-      elseif p1Crash then 
+      elseif p1_crash then 
         p2.score = p2.score + 1
-      elseif p2Crash then 
+      elseif p2_crash then 
         p1.score = p1.score + 1
       end
 
@@ -93,25 +93,28 @@ function update(dt)
       elseif p2.score >= target_score and p2.score > p1.score then
         game_over = true
         winner = 2
+      elseif p1.score >= target_score and p2.score >= target_score then
+        game_over = true
+        winner = 0
       else
         setup()
       end
       return
     end
 
-    p1.x = p1NextX
-    p1.y = p1NextY
+    p1.x = p1_next_X
+    p1.y = p1_next_Y
     grid[p1.x][p1.y] = "p1"
 
-    p2.x = p2NextX
-    p2.y = p2NextY
+    p2.x = p2_next_X
+    p2.y = p2_next_Y
     grid[p2.x][p2.y] = "p2"
   end
 end
 
 function on_press(button_name)
   if button_name == "MENU" then
-    resetGame()
+    reset_game()
     return
   elseif button_name == "ESC" then
     game_over = true
@@ -120,30 +123,34 @@ function on_press(button_name)
 
   if game_over then return end
 
-  if     button_name == "L_UP"    and p1.dir ~= DIR.DOWN  then p1.nextDir = DIR.UP
-  elseif button_name == "L_DOWN"  and p1.dir ~= DIR.UP    then p1.nextDir = DIR.DOWN
-  elseif button_name == "L_LEFT"  and p1.dir ~= DIR.RIGHT then p1.nextDir = DIR.LEFT
-  elseif button_name == "L_RIGHT" and p1.dir ~= DIR.LEFT  then p1.nextDir = DIR.RIGHT
+  if     button_name == "L_UP"    and p1.dir ~= DIR.DOWN  then p1.next_dir = DIR.UP
+  elseif button_name == "L_DOWN"  and p1.dir ~= DIR.UP    then p1.next_dir = DIR.DOWN
+  elseif button_name == "L_LEFT"  and p1.dir ~= DIR.RIGHT then p1.next_dir = DIR.LEFT
+  elseif button_name == "L_RIGHT" and p1.dir ~= DIR.LEFT  then p1.next_dir = DIR.RIGHT
   end
 
-  if     button_name == "R_UP"    and p2.dir ~= DIR.DOWN  then p2.nextDir = DIR.UP
-  elseif button_name == "R_DOWN"  and p2.dir ~= DIR.UP    then p2.nextDir = DIR.DOWN
-  elseif button_name == "R_LEFT"  and p2.dir ~= DIR.RIGHT then p2.nextDir = DIR.LEFT
-  elseif button_name == "R_RIGHT" and p2.dir ~= DIR.LEFT  then p2.nextDir = DIR.RIGHT
+  if     button_name == "R_UP"    and p2.dir ~= DIR.DOWN  then p2.next_dir = DIR.UP
+  elseif button_name == "R_DOWN"  and p2.dir ~= DIR.UP    then p2.next_dir = DIR.DOWN
+  elseif button_name == "R_LEFT"  and p2.dir ~= DIR.RIGHT then p2.next_dir = DIR.LEFT
+  elseif button_name == "R_RIGHT" and p2.dir ~= DIR.LEFT  then p2.next_dir = DIR.RIGHT
   end
 end
 
 function draw()
   clear()
 
-  p1Color = rgb(0, 255, 100)
-  p2Color = rgb(0, 255, 100)
+  p1_color = rgb(0, 255, 100)
+  p2_color = rgb(0, 255, 100) 
 
   if game_over then
     if winner == 1 then
-      rect_f(0, 0, SCREEN_W/2, SCREEN_H, p1Color)
+      rect_f(0, 0, SCREEN_W/2, SCREEN_H, p1_color)
+    elseif winner == 2 then
+      rect_f(SCREEN_W/2, 0, SCREEN_W/2, SCREEN_H, p2_color)
     else
-      rect_f(SCREEN_W/2, 0, SCREEN_W/2, SCREEN_H, p2Color)
+     
+      rect_f(0, 0, SCREEN_W/2, SCREEN_H, p1_color)
+      rect_f(SCREEN_W/2, 0, SCREEN_W/2, SCREEN_H, p2_color)
     end
     return
   end
@@ -151,13 +158,13 @@ function draw()
   for x = 0, SCREEN_W - 1 do
     for y = 0, SCREEN_H - 1 do
       if grid[x][y] == "p1" then
-        set_pixel(x, y, p1Color)
+        set_pixel(x, y, p1_color)
       elseif grid[x][y] == "p2" then
-        set_pixel(x, y, p2Color)
+        set_pixel(x, y, p2_color)
       end
     end
   end
 
-  set_pixel(p1.x, p1.y, p1Color)
-  set_pixel(p2.x, p2.y, p2Color)
+  set_pixel(p1.x, p1.y, p1_color)
+  set_pixel(p2.x, p2.y, p2_color)
 end
