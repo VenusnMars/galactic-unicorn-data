@@ -153,6 +153,7 @@ end
 -- local myvec = Vector2.ZERO
 local VECTOR2_NAMED_CONSTANTS = {
   ZERO  = Vector2.new( 0,  0),
+  ONE   = Vector2.new( 1,  1),
   UP    = Vector2.new( 0, -1),
   DOWN  = Vector2.new( 0,  1),
   LEFT  = Vector2.new(-1,  0),

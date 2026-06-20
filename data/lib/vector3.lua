@@ -134,6 +134,11 @@ end
 
 function Vector3.cross(a, b)
   -- see https://en.wikipedia.org/wiki/Cross_product#Computing
+
+  if not is_vector3(a) or not is_vector3(b) then
+    error("attempt to compute cross product with a non-Vector3 value", 2)
+  end
+
   return Vector3.new(
     a.y * b.z - a.z * b.y,
     a.z * b.x - a.x * b.z,
@@ -260,7 +265,7 @@ if (...) == nil then
   -- 1*2 + 2*4 + 3*6 = 2 + 8 + 18 = 28
   assert(dot_product == 28)
 
-  -- Check length (use proper 3D vector)
+  -- Check length
   local magnitude = Vector3.new(2, 3, 6):length()
   assert(magnitude == 7) -- 2^2 + 3^2 + 6^2 = 49
 
